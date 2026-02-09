@@ -1,0 +1,31 @@
+id: curl_download
+label: "cURL: Download File"
+description: "Download files from URLs using cURL"
+bin: curl
+install:
+  brew: curl
+  notes: "curl is usually pre-installed on macOS"
+args:
+  - key: url
+    type: text
+    required: true
+    label: "URL"
+    placeholder: "https://example.com/file.zip"
+  - key: follow_redirects
+    type: bool
+    default: true
+    label: "Follow Redirects"
+  - key: show_progress
+    type: bool
+    default: true
+    label: "Show Progress"
+command:
+  - "{bin}"
+  - "-L"
+  - "-o"
+  - "{output}"
+  - "{url}"
+outputs:
+  - key: output
+    type: save_file
+    defaultTemplate: "download.file"

@@ -1,0 +1,13 @@
+id: wyldcard_build
+label: "WyldCard: Build"
+description: "Build the WyldCard Java application with Gradle"
+bin: /Users/carlgarcia/Documents/GitHub/wyldcard/gradlew
+cwd: /Users/carlgarcia/Documents/GitHub/wyldcard
+args:
+  - key: clean_first
+    type: bool
+    label: "Clean before build"
+    default: false
+command:
+  - "{bin}"
+  - "build"

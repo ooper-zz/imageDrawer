@@ -1,0 +1,19 @@
+id: harmonic_run
+label: "Harmonic: Run Dev"
+description: "Start the Flutter app in debug mode"
+bin: flutter
+cwd: /Users/carlgarcia/Documents/GitHub/harmonic-melody-generator
+install:
+  brew: flutter
+  cask: true
+args:
+  - key: platform
+    type: enum
+    label: "Platform"
+    values: [chrome, macos, linux, windows]
+    default: chrome
+command:
+  - "{bin}"
+  - "run"
+  - "-d"
+  - "{platform}"

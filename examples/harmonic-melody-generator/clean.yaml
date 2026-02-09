@@ -1,0 +1,11 @@
+id: harmonic_clean
+label: "Harmonic: Clean"
+description: "Clean Flutter build artifacts"
+bin: flutter
+cwd: /Users/carlgarcia/Documents/GitHub/harmonic-melody-generator
+install:
+  brew: flutter
+  cask: true
+command:
+  - "{bin}"
+  - "clean"

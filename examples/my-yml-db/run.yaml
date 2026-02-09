@@ -1,0 +1,24 @@
+id: yml_db_run
+label: "YML-DB: Run Server"
+description: "Install deps and start the Flask YAML CRUD app on localhost:5000"
+bin: python3
+cwd: /Users/carlgarcia/Documents/GitHub/my-yml-db
+install:
+  brew: python
+command:
+  - "{bin}"
+  - "app.py"
+chain:
+  - label: "Install Dependencies"
+    bin: pip3
+    command:
+      - "{bin}"
+      - "install"
+      - "-r"
+      - "requirements.txt"
+    continueOnError: true
+  - label: "Run Flask Server"
+    bin: python3
+    command:
+      - "{bin}"
+      - "app.py"

@@ -1,0 +1,8 @@
+id: wyldcard_test
+label: "WyldCard: Test"
+description: "Run WyldCard JUnit tests"
+bin: /Users/carlgarcia/Documents/GitHub/wyldcard/gradlew
+cwd: /Users/carlgarcia/Documents/GitHub/wyldcard
+command:
+  - "{bin}"
+  - "test"

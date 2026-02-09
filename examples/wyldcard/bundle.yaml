@@ -1,0 +1,8 @@
+id: wyldcard_bundle
+label: "WyldCard: Bundle"
+description: "Create a distributable WyldCard application bundle with bundled JRE"
+bin: /Users/carlgarcia/Documents/GitHub/wyldcard/gradlew
+cwd: /Users/carlgarcia/Documents/GitHub/wyldcard
+command:
+  - "{bin}"
+  - "generateBundle"

@@ -1,0 +1,8 @@
+id: aicard_install
+label: "AICard: Install"
+description: "Run the AICard installation script (Desktop shortcut + Applications)"
+bin: bash
+cwd: /Users/carlgarcia/Documents/GitHub/AICard
+command:
+  - "{bin}"
+  - "/Users/carlgarcia/Documents/GitHub/AICard/install.sh"

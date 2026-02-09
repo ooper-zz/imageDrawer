@@ -1,0 +1,37 @@
+id: imagemagick_resize
+label: "ImageMagick: Resize Image"
+description: "Resize images to specified dimensions while maintaining aspect ratio"
+bin: magick
+install:
+  brew: imagemagick
+args:
+  - key: input
+    type: file
+    required: true
+    label: "Input Image"
+  - key: width
+    type: int
+    required: true
+    label: "Width (pixels)"
+    min: 1
+    max: 10000
+  - key: height
+    type: int
+    required: true
+    label: "Height (pixels)"
+    min: 1
+    max: 10000
+  - key: maintain_aspect
+    type: bool
+    default: true
+    label: "Maintain Aspect Ratio"
+command:
+  - "{bin}"
+  - "{input}"
+  - "-resize"
+  - "{width}x{height}"
+  - "{output}"
+outputs:
+  - key: output
+    type: save_file
+    defaultTemplate: "{inputDir}/{inputStem}_resized.{inputExt}"

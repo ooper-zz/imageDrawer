@@ -1,0 +1,10 @@
+id: yml_db_install
+label: "YML-DB: Install Deps"
+description: "Install Flask and PyYAML dependencies"
+bin: pip3
+cwd: /Users/carlgarcia/Documents/GitHub/my-yml-db
+command:
+  - "{bin}"
+  - "install"
+  - "-r"
+  - "/Users/carlgarcia/Documents/GitHub/my-yml-db/requirements.txt"

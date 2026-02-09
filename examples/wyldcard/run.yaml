@@ -1,0 +1,8 @@
+id: wyldcard_run
+label: "WyldCard: Run"
+description: "Launch the WyldCard HyperCard clone"
+bin: /Users/carlgarcia/Documents/GitHub/wyldcard/gradlew
+cwd: /Users/carlgarcia/Documents/GitHub/wyldcard
+command:
+  - "{bin}"
+  - "run"

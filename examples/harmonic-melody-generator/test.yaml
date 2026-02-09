@@ -1,0 +1,11 @@
+id: harmonic_test
+label: "Harmonic: Test"
+description: "Run Flutter unit and widget tests"
+bin: flutter
+cwd: /Users/carlgarcia/Documents/GitHub/harmonic-melody-generator
+install:
+  brew: flutter
+  cask: true
+command:
+  - "{bin}"
+  - "test"
