@@ -1,14 +1,13 @@
-# Rust
-target/
-Cargo.lock
-
-# Node
-node_modules/
-dist/
-.DS_Store
-
-# Tauri
-src-tauri/target/
+# Flutter/Dart
+.dart_tool/
+.flutter-plugins
+.flutter-plugins-dependencies
+.packages
+.pub-cache/
+.pub/
+build/
+*.dill
+*.dill.track.dill
 
 # IDE
 .vscode/
@@ -16,10 +15,25 @@ src-tauri/target/
 *.swp
 *.swo
 *~
+*.iml
 
 # OS
 .DS_Store
 Thumbs.db
 
-# Build
+# Build artifacts
 *.log
+*.lock
+pubspec.lock
+
+# Secrets and environment
+.env
+*.pem
+*.key
+*.p12
+*.pfx
+*.cer
+*.crt
+*.der
+google-services.json
+GoogleService-Info.plist
