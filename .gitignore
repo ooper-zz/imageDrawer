@@ -20,6 +20,7 @@ build/
 # OS
 .DS_Store
 Thumbs.db
+.metadata
 
 # Build artifacts
 *.log
