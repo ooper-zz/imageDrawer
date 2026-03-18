@@ -1,300 +1,117 @@
-# CliDeck
+# Image to Vector Converter
 
-A production-quality macOS menu bar application that wraps CLI tools with dynamic YAML-driven UI. Never remember flags or parameters again.
+A Flutter app that converts images to vector art with animated drawing visualization.
 
 ## Features
 
-- **Menu Bar Native**: Lives in your macOS menu bar, no dock icon clutter
-- **YAML-Driven**: Define tools with simple YAML schemas
-- **Dynamic UI**: Forms auto-generate from tool definitions
-- **Secure Execution**: No shell injection - uses argument arrays only
-- **Preset Management**: Save and reuse parameter combinations
-- **Real-time Output**: Stream stdout/stderr with color coding
-- **Binary Resolution**: Automatic detection of Homebrew and system binaries
-- **Lightweight**: Built with Tauri (Rust + Web)
+- **Image Selection**: Pick images from your device's gallery
+- **Vector Conversion**: Convert raster images to vector paths using edge detection
+- **Animated Drawing**: Watch as the vector art is drawn stroke by stroke (one complete stroke at a time)
+- **Adjustable Settings**: Control threshold and simplification parameters
+- **Real-time Preview**: See the conversion results immediately
+- **SVG Export**: Save your vector artwork as scalable SVG files
+- **Web Compatible**: Runs in any modern web browser
 
-## Architecture
+## How It Works
 
-```
-CliDeck/
-├── src-tauri/          # Rust backend
-│   ├── src/
-│   │   ├── main.rs     # App entry & Tauri commands
-│   │   ├── schema.rs   # YAML schema definitions
-│   │   ├── registry.rs # Tool registry & loader
-│   │   ├── executor.rs # Secure command execution
-│   │   └── presets.rs  # Preset management
-│   └── Cargo.toml
-├── ui/                 # React frontend
-│   ├── src/
-│   │   ├── App.tsx
-│   │   ├── components/
-│   │   └── types.ts
-│   └── package.json
-└── examples/           # Example tool definitions
-```
+1. **Image Processing**: The app converts the selected image to grayscale
+2. **Edge Detection**: Uses threshold-based binary conversion to find edges
+3. **Contour Tracing**: Traces contours using 8-connected neighborhood
+4. **Path Simplification**: Applies Douglas-Peucker algorithm to reduce complexity
+5. **Animated Rendering**: Draws the vector paths progressively to simulate hand-drawing
+
+## Prerequisites
+
+- **Flutter SDK**: Install from [flutter.dev](https://flutter.dev/docs/get-started/install)
+- **For macOS/iOS development**: Full Xcode from the App Store (Command Line Tools alone are insufficient)
+- **For web development**: Chrome browser (no additional setup needed)
+- **For Android development**: Android Studio (optional)
 
 ## Installation
 
-### Prerequisites
+1. Make sure you have Flutter installed
+2. **For macOS/iOS**: Install full Xcode from the App Store, then:
+   ```bash
+   sudo xcode-select --switch /Applications/Xcode.app/Contents/Developer
+   ```
+3. **For web** (easiest option): No additional setup needed
+4. Clone this repository
+5. Run `make install` to install dependencies
+6. Run `make run-web` (web) or `make run-macos` (macOS with Xcode) to start the app
 
-- **Rust**: Install from [rustup.rs](https://rustup.rs)
-- **Node.js**: v18+ (for frontend build)
-- **Xcode Command Line Tools**: `xcode-select --install`
+## Quick Start Commands
 
-### Build from Source
-
-```bash
-# Clone the repository
-git clone <repo-url>
-cd cliDeck
-
-# Install frontend dependencies
-cd ui
-npm install
-cd ..
-
-# Build the app
-cd src-tauri
-cargo tauri build
-
-# The built app will be in src-tauri/target/release/bundle/macos/
-```
-
-### Development Mode
+The project includes a Makefile for convenient command-line operations:
 
 ```bash
-# Terminal 1: Start frontend dev server
-cd ui
-npm run dev
+# Setup
+make install        # Install Flutter dependencies
+make doctor         # Check Flutter environment
 
-# Terminal 2: Run Tauri in dev mode
-cd src-tauri
-cargo tauri dev
+# Development
+make run           # Run app in development mode
+make run-ios       # Run on iOS simulator
+make run-android   # Run on Android emulator
+make run-macos     # Run on macOS
+make run-web       # Run on web browser
+
+# Building
+make build         # Build for all platforms
+make build-ios     # Build iOS app
+make build-android # Build Android APK
+make build-macos   # Build macOS app
+
+# Testing
+make test          # Run all tests
+make test-verbose  # Run tests with verbose output
+
+# Deployment
+make deploy-ios    # Build iOS release (.ipa)
+make deploy-android# Build Android release APK
+
+# Maintenance
+make clean         # Clean build artifacts
+make upgrade       # Upgrade Flutter and dependencies
+make help          # Show all available commands
 ```
+
+## Dependencies
+
+- `image_picker`: For selecting images from the gallery
+- `vector_graphics_compiler`: For vector graphics support
+- `permission_handler`: For handling permissions
 
 ## Usage
 
-### Adding Tools
+1. Click "Choose Image" to select an image from your gallery
+2. Adjust the conversion settings:
+   - **Threshold**: Controls the sensitivity of edge detection (0-255)
+   - **Simplification**: Controls how much the paths are simplified (0.5-10.0)
+3. Click "Convert to Vector" to process the image
+4. Watch the animated drawing of the vector result (draws one complete stroke at a time)
+5. Use "Play" to replay the animation or "Reset" to restart
+6. Click "Save as SVG" to download your vector artwork as a scalable SVG file
 
-Tools are defined in YAML files located at:
-```
-~/Library/Application Support/CliDeck/tools/
-```
+## Technical Details
 
-Copy example tools to get started:
-```bash
-mkdir -p ~/Library/Application\ Support/CliDeck/tools
-cp examples/*.yaml ~/Library/Application\ Support/CliDeck/tools/
-```
+### Vector Conversion Algorithm
 
-### Tool Schema
+The app uses a custom vector conversion pipeline:
 
-```yaml
-id: tool_unique_id
-label: "Display Name"
-description: "Optional description"
-bin: binary_name_or_path
+1. **Grayscale Conversion**: Converts RGB to grayscale using standard luminance formula
+2. **Binary Thresholding**: Creates a binary image based on the threshold value
+3. **Contour Detection**: Uses 8-connected neighborhood tracing to find contours
+4. **Path Simplification**: Applies Douglas-Peucker algorithm to reduce path complexity
 
-args:
-  - key: param_name
-    type: text|int|float|bool|enum|file
-    required: true|false
-    default: value
-    label: "Display Label"
-    # Type-specific options...
+### Animation System
 
-command:
-  - "{bin}"
-  - "--flag"
-  - "{param_name}"
+The drawing animation uses Flutter's `AnimationController` and `CustomPainter`:
 
-outputs:
-  - key: output
-    type: save_file
-    defaultTemplate: "{inputStem}.ext"
-```
-
-### Parameter Types
-
-#### Text
-```yaml
-- key: name
-  type: text
-  required: true
-  placeholder: "Enter text..."
-```
-
-#### Integer/Float
-```yaml
-- key: count
-  type: int
-  min: 1
-  max: 100
-  default: 10
-```
-
-#### Boolean
-```yaml
-- key: verbose
-  type: bool
-  default: false
-```
-
-#### Enum
-```yaml
-- key: format
-  type: enum
-  values: [jpg, png, gif]
-  default: jpg
-```
-
-#### File
-```yaml
-- key: input
-  type: file
-  required: true
-```
-
-### Template Variables
-
-Use placeholders in `command` and `defaultTemplate`:
-
-- `{bin}` - Resolved binary path
-- `{param_name}` - Any parameter key
-- `{input}` - Input file path
-- `{inputStem}` - Input filename without extension
-- `{inputName}` - Input filename with extension
-- `{output}` - Output file path
-
-### Presets
-
-1. Configure parameters in the form
-2. Click the **Save** button
-3. Name your preset
-4. Load presets from the dropdown
-
-Presets are stored at:
-```
-~/Library/Application Support/CliDeck/presets/
-```
-
-## Security
-
-- **No Shell Execution**: Commands use `Command::new().args()` - no shell interpretation
-- **Explicit File Access**: File paths only via system dialogs
-- **No Network Access**: App runs entirely locally
-- **Sandboxed**: Only defined tools can execute
-
-## Binary Resolution
-
-CliDeck searches for binaries in this order:
-
-1. Absolute paths (if provided)
-2. System PATH
-3. Homebrew paths:
-   - `/opt/homebrew/bin/`
-   - `/usr/local/bin/`
-   - `/opt/homebrew/opt/{bin}/bin/`
-
-## Example Tools
-
-### FFmpeg Audio Extraction
-```bash
-cp examples/ffmpeg_audio.yaml ~/Library/Application\ Support/CliDeck/tools/
-```
-
-### ImageMagick Resize
-```bash
-cp examples/imagemagick_resize.yaml ~/Library/Application\ Support/CliDeck/tools/
-```
-
-### cURL Download
-```bash
-cp examples/curl_download.yaml ~/Library/Application\ Support/CliDeck/tools/
-```
-
-### Git Clone
-```bash
-cp examples/git_clone.yaml ~/Library/Application\ Support/CliDeck/tools/
-```
-
-## Troubleshooting
-
-### Binary Not Found
-
-If a tool shows "Binary not found":
-
-1. Install the binary: `brew install <tool>`
-2. Or provide absolute path in YAML: `bin: /usr/local/bin/tool`
-3. Or use "Locate Binary" in UI (future feature)
-
-### Tool Not Appearing
-
-1. Check YAML syntax: `yamllint tool.yaml`
-2. Reload tools: Right-click menu bar icon → "Reload Tools"
-3. Check logs in Console.app for parse errors
-
-### Execution Fails
-
-- Verify all required parameters are filled
-- Check binary has execute permissions
-- Review command template for placeholder errors
-
-## Development
-
-### Project Structure
-
-- **Rust Backend**: Handles YAML parsing, command execution, file I/O
-- **React Frontend**: Dynamic form generation, real-time log display
-- **Tauri Bridge**: Type-safe IPC between Rust and TypeScript
-
-### Adding Features
-
-1. Backend: Add Tauri command in `src-tauri/src/main.rs`
-2. Frontend: Call via `invoke()` from `@tauri-apps/api`
-3. Types: Update `ui/src/types.ts` for TypeScript safety
-
-### Testing
-
-```bash
-# Run Rust tests
-cd src-tauri
-cargo test
-
-# Run frontend tests (if added)
-cd ui
-npm test
-```
-
-## Roadmap
-
-- [ ] Launch on login option
-- [ ] Custom binary path override UI
-- [ ] Tool categories/folders
-- [ ] Command history
-- [ ] Export/import tool definitions
-- [ ] Dark mode support
-- [ ] Keyboard shortcuts
-- [ ] Tool search/filter
+- Each vector path is drawn progressively
+- Paths are sequenced to create a natural drawing flow
+- A small circle indicator shows the current drawing position
+- Smooth easing functions create natural movement
 
 ## License
 
-MIT
-
-## Contributing
-
-Contributions welcome! Please:
-
-1. Fork the repository
-2. Create a feature branch
-3. Add tests for new features
-4. Submit a pull request
-
-## Credits
-
-Built with:
-- [Tauri](https://tauri.app) - Desktop app framework
-- [React](https://react.dev) - UI framework
-- [Tailwind CSS](https://tailwindcss.com) - Styling
-- [Lucide](https://lucide.dev) - Icons
+This project is open source and available under the MIT License.

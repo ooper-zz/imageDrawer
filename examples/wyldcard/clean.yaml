@@ -1,8 +1,0 @@
-id: wyldcard_clean
-label: "WyldCard: Clean"
-description: "Clean WyldCard build artifacts"
-bin: /Users/carlgarcia/Documents/GitHub/wyldcard/gradlew
-cwd: /Users/carlgarcia/Documents/GitHub/wyldcard
-command:
-  - "{bin}"
-  - "clean"
